@@ -7,15 +7,22 @@
     <img
       :src="'https://image.tmdb.org/t/p/w300/' + movie.poster_path"
       alt="movie.title"
-      v-on:click="logResum()"
+      v-on:click="setCurrentMovie(movie.id)"
     />
     <h2 class="movie-title">
       {{ movie.title }}
     </h2>
+    <MovieSheet
+      v-for="id in currentMovie"
+      :key="id"
+      v-on:close-sheet="setCurrentMovie()"
+      v-bind:id="id"
+    />
   </div>
 </template>
 
 <script>
+import MovieSheet from './MovieSheet.vue'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { faStar } from '@fortawesome/free-regular-svg-icons'
  
@@ -23,16 +30,23 @@ library.add(faStar)
 
 export default {
   name: 'MovieItem',
+  components: {
+    MovieSheet,
+  },
   props: {
     movie: Object,
   },
-  methods: {
-    logResum() {
-      console.log(this.movie.overview)
-    }
+  data() {
+    return {
+      currentMovie: []
+    };
   },
-  async created() {
-    // console.log(this.movie.vote_average);
+  methods: {
+    setCurrentMovie(id) {
+      id
+      ? this.currentMovie.push(id)
+      : this.currentMovie.splice(0)
+    }
   }
  };
 </script>
