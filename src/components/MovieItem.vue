@@ -1,6 +1,14 @@
 <template>
   <div class="movie-item">
-    <img :src="'https://image.tmdb.org/t/p/w300/' + movie.poster_path" alt="movie.title" />
+    <div class="note">
+      <font-awesome-icon class='icon' :icon="['far', 'star']" />
+      <p>{{ movie.vote_average }}</p>
+    </div>
+    <img
+      :src="'https://image.tmdb.org/t/p/w300/' + movie.poster_path"
+      alt="movie.title"
+      v-on:click="logResum()"
+    />
     <h2 class="movie-title">
       {{ movie.title }}
     </h2>
@@ -8,30 +16,64 @@
 </template>
 
 <script>
+import { library } from '@fortawesome/fontawesome-svg-core'
+import { faStar } from '@fortawesome/free-regular-svg-icons'
+ 
+library.add(faStar)
+
 export default {
   name: 'MovieItem',
   props: {
     movie: Object,
   },
   methods: {
+    logResum() {
+      console.log(this.movie.overview)
+    }
   },
   async created() {
-    // console.log(this.movie.title);
+    // console.log(this.movie.vote_average);
   }
  };
 </script>
 
 <style lang="scss" scoped>
   .movie-item{
+    position: relative;
     width: 16rem;
     padding: 1rem;
     margin: 1rem;
     display: flex;
     flex-direction: column;
     align-items: center;
-    
+
+    .note{
+      position: absolute;
+      left: 1rem;
+      top: 2rem;
+      height: 1.5rem;
+      border-radius: 0 1.5rem 1.5rem 0;
+      display: flex;
+      align-items: center;
+      padding: .5rem;
+      background-color: rgba(0, 0, 0, 0.8);
+      color: rgba(250, 250, 250, 0.7);
+
+      .icon{
+        margin: 0 .25rem 0 0;
+      }
+
+      p{
+        margin: 0 1rem 0 0;
+      }
+    }
+
     img{
       width: 16rem;
+
+      &:hover{
+        cursor: pointer;
+      }
     }
 
     .movie-title{

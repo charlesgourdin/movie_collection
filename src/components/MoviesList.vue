@@ -34,7 +34,6 @@ export default {
 <style scoped>
   .movies{
     width: fit-content;
-    border: 1px green solid;
     padding: auto;
     display: flex;
     flex-wrap: wrap;
