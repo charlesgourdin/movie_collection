@@ -21,7 +21,7 @@ export default {
  };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
   .movie-item{
     width: 16rem;
     padding: 1rem;
@@ -29,18 +29,19 @@ export default {
     display: flex;
     flex-direction: column;
     align-items: center;
+    
+    img{
+      width: 16rem;
+    }
+
+    .movie-title{
+      width: 100%;
+      font-size: 1.25rem;
+      text-align: left;
+      margin: .75rem 0;
+      color: whitesmoke;
+    }
   }
 
-  img{
-    width: 16rem;
-  }
-
-  .movie-title{
-    width: 100%;
-    font-size: 1.25rem;
-    text-align: left;
-    margin: .75rem 0;
-    color: whitesmoke;
-  }
 
 </style>
