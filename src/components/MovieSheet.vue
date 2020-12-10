@@ -2,35 +2,45 @@
   <div class="movie-sheet">
     <div class="outside" v-on:click="closeSheet()"/>
     <div class="sheet">
-      <button class="close-button" v-on:click="closeSheet()">
-          <font-awesome-icon class='icon' :icon="['fas', 'times']" size="2x" />
-      </button>
-      <iframe width="560" height="315" v-bind:src="videoLink" frameborder="0"></iframe>
-      <div class="description">
-        <h2>{{movie.title}}</h2>
-        <p class="info">{{movie.release_date}} - {{movie.status}} - {{movie.runtime}}mn</p>
-        <p class="overwiew">{{movie.overview}}</p>
+      <div class="loader" v-if="youtubeKey === ''">
+        <font-awesome-icon class='icon' :icon="['fas', 'spinner']" size="4x" spin/>
+      </div>
+      <div v-if="youtubeKey !== ''">
+        <button class="close-button" v-on:click="closeSheet()">
+            <font-awesome-icon class='icon' :icon="['fas', 'times']" size="2x" />
+        </button>
+        <YoutubeVideo :youtubeKey="youtubeKey"/>
+        <div class="description">
+          <h2>{{movie.title}}</h2>
+          <p class="info">{{movie.release_date}} - {{movie.status}} - {{movie.runtime}}mn</p>
+          <p class="overwiew">{{movie.overview}}</p>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import YoutubeVideo from './YoutubeVideo.vue';
 import axios from 'axios';
-import { library } from '@fortawesome/fontawesome-svg-core'
-import { faTimes } from '@fortawesome/free-solid-svg-icons'
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { faTimes } from '@fortawesome/free-solid-svg-icons';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
  
-library.add(faTimes)
+library.add(faTimes, faSpinner)
 
 export default {
   name: 'MovieSheet',
+  components: {
+    YoutubeVideo,
+  },
   props: {
     id: Number,
   },
   data() {
     return {
       movie: {},
-      videoLink: '',
+      youtubeKey: '',
       cast: [],
     };
   },
@@ -43,8 +53,7 @@ export default {
       this.movie = movieResponse.data;
 
       const videoKeyResponse = await axios.get(`https://api.themoviedb.org/3/movie/${this.id}/videos?api_key=49f6cce872dedfb45746781479e03ce5`);
-      const videoKey = videoKeyResponse.data.results.find(({site}) => site === "YouTube").key
-      this.videoLink = `https://www.youtube.com/embed/${videoKey}`
+      this.youtubeKey = videoKeyResponse.data.results.find(({site}) => site === "YouTube").key
 
       const castResponse = await axios.get(`https://api.themoviedb.org/3/movie/${this.id}/credits?api_key=49f6cce872dedfb45746781479e03ce5`);
       this.cast = castResponse.data.cast;
@@ -86,6 +95,14 @@ export default {
       animation: slide-in-right 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
       color: whitesmoke;
 
+      .loader{
+        height: 80%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: rgba(whitesmoke, 0.7);
+      }
+
       .description{
         text-align: left;
         padding: 0 2rem;
@@ -101,7 +118,11 @@ export default {
         right: 2rem;
         background: none;
         border: none;
-        cursor: pointer;
+        color: rgba(whitesmoke, 0.7);
+        &:hover{
+          cursor: pointer;
+          color: whitesmoke;
+        }
       }
     }
 
