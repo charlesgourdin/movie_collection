@@ -1,15 +1,24 @@
 <template>
   <div class="youtube-video">
-    <div v-if="videos.length === 0" class="play-button" v-on:click="setPlayerOn()"></div>
-    <img v-if="videos.length === 0" :src="videoImg" alt="youtube"/>
+    <div
+      v-if="videos.length === 0"
+      class="play-button"
+      @click="setPlayerOn()"
+    />
+    <img
+      v-if="videos.length === 0"
+      :src="videoImg"
+      alt="youtube"
+    >
     <iframe
       v-for="video in videos"
-      v-bind:key="video"
+      :key="video"
       width="560"
       height="315"
-      v-bind:src="video"
+      :src="video"
       frameborder="0"
-    ></iframe>
+      allowfullscreen
+    />
   </div>
 </template>
 
@@ -17,7 +26,12 @@
 export default {
   name: 'YoutubeVideo',
   props: {
-    youtubeKey: String,
+    youtubeKey: {
+      type: String,
+      default() {
+        return '';
+      },
+    },
   },
   data() {
     return {
@@ -28,13 +42,13 @@ export default {
   methods: {
     setPlayerOn() {
       this.videos.push("https://www.youtube.com/embed/"+this.youtubeKey+"?rel=0&showinfo=0&autoplay=1");
-    }
-  }
+    },
+  },
  };
 </script>
 
 <style lang="scss" scoped>
-  .youtube-video{
+  .youtube-video {
     background-color: #000;
     margin-bottom: 30px;
     position: relative;
@@ -42,7 +56,7 @@ export default {
     overflow: hidden;
     cursor: pointer;
 
-    img{
+    img {
       width: 100%;
       top: -16.84%;
       left: 0;

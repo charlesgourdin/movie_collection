@@ -1,32 +1,35 @@
 <template>
   <div class="movie-item">
     <div class="note">
-      <font-awesome-icon class='icon' :icon="['far', 'star']" />
+      <font-awesome-icon
+        class="icon"
+        :icon="['far', 'star']"
+      />
       <p>{{ movie.vote_average }}</p>
     </div>
     <img
       :src="'https://image.tmdb.org/t/p/w300/' + movie.poster_path"
       alt="movie.title"
-      v-on:click="setCurrentMovie(movie.id)"
-    />
+      @click="setCurrentMovie(movie.id)"
+    >
     <h2 class="movie-title">
       {{ movie.title }}
     </h2>
     <MovieSheet
       v-for="id in currentMovie"
+      :id="id"
       :key="id"
-      v-on:close-sheet="setCurrentMovie()"
-      v-bind:id="id"
+      @close-sheet="setCurrentMovie()"
     />
   </div>
 </template>
 
 <script>
-import MovieSheet from './MovieSheet.vue'
-import { library } from '@fortawesome/fontawesome-svg-core'
-import { faStar } from '@fortawesome/free-regular-svg-icons'
+import MovieSheet from './MovieSheet.vue';
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { faStar } from '@fortawesome/free-regular-svg-icons';
  
-library.add(faStar)
+library.add(faStar);
 
 export default {
   name: 'MovieItem',
@@ -34,25 +37,30 @@ export default {
     MovieSheet,
   },
   props: {
-    movie: Object,
+    movie: {
+      type: Object,
+      default(){
+        return {};
+        },
+      },
   },
   data() {
     return {
-      currentMovie: []
+      currentMovie: [],
     };
   },
   methods: {
     setCurrentMovie(id) {
       id
       ? this.currentMovie.push(id)
-      : this.currentMovie.splice(0)
-    }
-  }
+      : this.currentMovie.splice(0);
+    },
+  },
  };
 </script>
 
 <style lang="scss" scoped>
-  .movie-item{
+  .movie-item {
     position: relative;
     width: 16rem;
     padding: 1rem;
@@ -61,7 +69,7 @@ export default {
     flex-direction: column;
     align-items: center;
 
-    .note{
+    .note {
       position: absolute;
       left: 1rem;
       top: 2rem;
@@ -73,16 +81,16 @@ export default {
       background-color: rgba(0, 0, 0, 0.8);
       color: rgba(250, 250, 250, 0.7);
 
-      .icon{
+      .icon {
         margin: 0 .25rem 0 0;
       }
 
-      p{
+      p {
         margin: 0 1rem 0 0;
       }
     }
 
-    img{
+    img {
       width: 16rem;
 
       &:hover{
@@ -90,7 +98,7 @@ export default {
       }
     }
 
-    .movie-title{
+    .movie-title {
       width: 100%;
       font-size: 1.25rem;
       text-align: left;

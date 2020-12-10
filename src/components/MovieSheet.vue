@@ -1,19 +1,41 @@
 <template>
   <div class="movie-sheet">
-    <div class="outside" v-on:click="closeSheet()"/>
+    <div
+      class="outside"
+      @click="closeSheet()"
+    />
     <div class="sheet">
-      <div class="loader" v-if="youtubeKey === ''">
-        <font-awesome-icon class='icon' :icon="['fas', 'spinner']" size="4x" spin/>
+      <div
+        v-if="youtubeKey === ''"
+        class="loader"
+      >
+        <font-awesome-icon
+          class="icon"
+          :icon="['fas', 'spinner']"
+          size="4x"
+          spin
+        />
       </div>
       <div v-if="youtubeKey !== ''">
-        <button class="close-button" v-on:click="closeSheet()">
-            <font-awesome-icon class='icon' :icon="['fas', 'times']" size="2x" />
+        <button
+          class="close-button"
+          @click="closeSheet()"
+        >
+          <font-awesome-icon
+            class="icon"
+            :icon="['fas', 'times']"
+            size="2x"
+          />
         </button>
-        <YoutubeVideo :youtubeKey="youtubeKey"/>
+        <YoutubeVideo :youtube-key="youtubeKey" />
         <div class="description">
-          <h2>{{movie.title}}</h2>
-          <p class="info">{{movie.release_date}} - {{movie.status}} - {{movie.runtime}}mn</p>
-          <p class="overwiew">{{movie.overview}}</p>
+          <h2>{{ movie.title }}</h2>
+          <p class="info">
+            {{ movie.release_date }} - {{ movie.status }} - {{ movie.runtime }}mn
+          </p>
+          <p class="overwiew">
+            {{ movie.overview }}
+          </p>
         </div>
       </div>
     </div>
@@ -27,7 +49,7 @@ import { library } from '@fortawesome/fontawesome-svg-core';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
  
-library.add(faTimes, faSpinner)
+library.add(faTimes, faSpinner);
 
 export default {
   name: 'MovieSheet',
@@ -35,7 +57,12 @@ export default {
     YoutubeVideo,
   },
   props: {
-    id: Number,
+    id: {
+      type:Number,
+      default() {
+        return 0;
+      },
+    },
   },
   data() {
     return {
@@ -44,30 +71,36 @@ export default {
       cast: [],
     };
   },
+  async created() {
+    await this.fetchMovie();
+  },
   methods: {
     closeSheet() {
       this.$emit('close-sheet');
     },
     async fetchMovie() {
-      const movieResponse = await axios.get(`https://api.themoviedb.org/3/movie/${this.id}?api_key=49f6cce872dedfb45746781479e03ce5`);
+      const movieResponse = await axios
+        .get(`https://api.themoviedb.org/3/movie/${this.id}?api_key=49f6cce872dedfb45746781479e03ce5`);
+
       this.movie = movieResponse.data;
 
-      const videoKeyResponse = await axios.get(`https://api.themoviedb.org/3/movie/${this.id}/videos?api_key=49f6cce872dedfb45746781479e03ce5`);
-      this.youtubeKey = videoKeyResponse.data.results.find(({site}) => site === "YouTube").key
+      const videoKeyResponse = await axios
+        .get(`https://api.themoviedb.org/3/movie/${this.id}/videos?api_key=49f6cce872dedfb45746781479e03ce5`);
 
-      const castResponse = await axios.get(`https://api.themoviedb.org/3/movie/${this.id}/credits?api_key=49f6cce872dedfb45746781479e03ce5`);
+      this.youtubeKey = videoKeyResponse.data.results.find(({site}) => site === "YouTube").key;
+
+      const castResponse = await axios
+        .get(`https://api.themoviedb.org/3/movie/${this.id}/credits?api_key=49f6cce872dedfb45746781479e03ce5`);
+
       this.cast = castResponse.data.cast;
-      console.log(this.cast[0])
+      console.log(this.cast[0]);
     },
-  },
-  async created() {
-    await this.fetchMovie()
   }
  };
 </script>
 
 <style lang="scss" scoped>
-  .movie-sheet{
+  .movie-sheet {
     width: 100vw;
     height: 100vh;
     position: fixed;
@@ -78,12 +111,12 @@ export default {
     display: flex;
     justify-content: right;
 
-    .outside{
+    .outside {
       flex: 1 1 auto;
       height: 100vh;
     }
 
-    .sheet{
+    .sheet {
       width: 560px;
       height: 100vh;
       padding-top: 4rem;
@@ -95,7 +128,7 @@ export default {
       animation: slide-in-right 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
       color: whitesmoke;
 
-      .loader{
+      .loader {
         height: 80%;
         display: flex;
         justify-content: center;
@@ -103,16 +136,16 @@ export default {
         color: rgba(whitesmoke, 0.7);
       }
 
-      .description{
+      .description {
         text-align: left;
         padding: 0 2rem;
 
-        .info{
+        .info {
           font-size: .75rem;
         }
       }
 
-      .close-button{
+      .close-button {
         position: absolute;
         top: 1.2rem;
         right: 2rem;
@@ -126,15 +159,15 @@ export default {
       }
     }
 
-  @keyframes slide-in-right {
-    0% {
-      -webkit-transform: translateX(1000px);
-              transform: translateX(1000px);
+    @keyframes slide-in-right {
+      0% {
+        -webkit-transform: translateX(1000px);
+                transform: translateX(1000px);
+      }
+      100% {
+        -webkit-transform: translateX(0);
+                transform: translateX(0);
+      }
     }
-    100% {
-      -webkit-transform: translateX(0);
-              transform: translateX(0);
-    }
-}
   }
 </style>
