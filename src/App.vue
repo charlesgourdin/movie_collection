@@ -1,30 +1,28 @@
 <template>
   <div id="app">
-    <MovieList />
+    <MoviesList />
   </div>
 </template>
 
-<script>
-import MovieList from './components/MoviesList.vue';
+<script lang="ts">
+import { Component, Vue } from 'vue-property-decorator';
+import MoviesList from './components/MoviesList.vue';
 
-export default {
-  name: 'App',
+@Component({
   components: {
-    MovieList,
+    MoviesList,
   },
-}
+})
+export default class App extends Vue {}
 </script>
 
-<style>
+<style lang="scss">
 body {
-  overflow-x: hidden;
-  margin: 0;
+  background-color: #2c3e50;
+  color: whitesmoke;
 }
 
 #app {
-  width: 100vw;
-  min-height: 100vh;
-  background-color: #2c3e50;
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;

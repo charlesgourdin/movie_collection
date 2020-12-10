@@ -24,39 +24,32 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import { Component, Vue, Prop } from 'vue-property-decorator';
+
 import MovieSheet from './MovieSheet.vue';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faStar } from '@fortawesome/free-regular-svg-icons';
  
 library.add(faStar);
 
-export default {
-  name: 'MovieItem',
+@Component({
   components: {
     MovieSheet,
   },
-  props: {
-    movie: {
-      type: Object,
-      default(){
-        return {};
-        },
-      },
-  },
-  data() {
-    return {
-      currentMovie: [],
-    };
-  },
-  methods: {
-    setCurrentMovie(id) {
-      id
-      ? this.currentMovie.push(id)
-      : this.currentMovie.splice(0);
-    },
-  },
- };
+})
+
+export default class MovieItem extends Vue {
+  @Prop() movie?: object;
+
+  currentMovie: number[] = [];
+
+  setCurrentMovie(id: number):void {
+    id
+    ? this.currentMovie.push(id)
+    : this.currentMovie.splice(0);
+  }
+ }
 </script>
 
 <style lang="scss" scoped>

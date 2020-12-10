@@ -22,29 +22,23 @@
   </div>
 </template>
 
-<script>
-export default {
-  name: 'YoutubeVideo',
-  props: {
-    youtubeKey: {
-      type: String,
-      default() {
-        return '';
-      },
-    },
-  },
-  data() {
-    return {
-      videoImg: "https://img.youtube.com/vi/"+this.youtubeKey+"/sddefault.jpg",
-      videos: [],
-    };
-  },
-  methods: {
-    setPlayerOn() {
-      this.videos.push("https://www.youtube.com/embed/"+this.youtubeKey+"?rel=0&showinfo=0&autoplay=1");
-    },
-  },
- };
+<script lang="ts">
+import { Vue, Prop, Component } from 'vue-property-decorator';
+
+@Component
+export default class YoutubeVideo extends Vue {
+  @Prop() videoKey?: string;
+
+  videos: string[] = []
+
+  get videoImg() {
+    return "https://img.youtube.com/vi/"+this.videoKey+"/sddefault.jpg";
+  }
+
+  setPlayerOn() {
+    this.videos.push("https://www.youtube.com/embed/"+this.videoKey+"?rel=0&showinfo=0&autoplay=1");
+  }
+}
 </script>
 
 <style lang="scss" scoped>

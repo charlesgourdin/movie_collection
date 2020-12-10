@@ -27,7 +27,7 @@
             size="2x"
           />
         </button>
-        <YoutubeVideo :youtube-key="youtubeKey" />
+        <YoutubeVideo :videoKey="youtubeKey" />
         <div class="description">
           <h2>{{ movie.title }}</h2>
           <p class="info">
@@ -42,61 +42,57 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import { Component, Vue, Prop } from 'vue-property-decorator';
+
 import YoutubeVideo from './YoutubeVideo.vue';
 import axios from 'axios';
+
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
  
 library.add(faTimes, faSpinner);
 
-export default {
-  name: 'MovieSheet',
+@Component({
   components: {
     YoutubeVideo,
   },
-  props: {
-    id: {
-      type:Number,
-      default() {
-        return 0;
-      },
-    },
-  },
-  data() {
-    return {
-      movie: {},
-      youtubeKey: '',
-      cast: [],
-    };
-  },
+})
+
+export default class MovieSheet extends Vue{
+  @Prop() id?: number;
+
+  movie = {};
+  youtubeKey: string = "";
+  cast: any[] = [];
+
   async created() {
     await this.fetchMovie();
-  },
-  methods: {
-    closeSheet() {
-      this.$emit('close-sheet');
-    },
-    async fetchMovie() {
-      const movieResponse = await axios
-        .get(`https://api.themoviedb.org/3/movie/${this.id}?api_key=49f6cce872dedfb45746781479e03ce5`);
-
-      this.movie = movieResponse.data;
-
-      const videoKeyResponse = await axios
-        .get(`https://api.themoviedb.org/3/movie/${this.id}/videos?api_key=49f6cce872dedfb45746781479e03ce5`);
-
-      this.youtubeKey = videoKeyResponse.data.results.find(({site}) => site === "YouTube").key;
-
-      const castResponse = await axios
-        .get(`https://api.themoviedb.org/3/movie/${this.id}/credits?api_key=49f6cce872dedfb45746781479e03ce5`);
-
-      this.cast = castResponse.data.cast;
-      console.log(this.cast[0]);
-    },
   }
- };
+
+  closeSheet() {
+    this.$emit('close-sheet');
+  }
+
+  async fetchMovie() {
+    const movieResponse = await axios
+      .get(`https://api.themoviedb.org/3/movie/${this.id}?api_key=49f6cce872dedfb45746781479e03ce5`);
+
+    this.movie = movieResponse.data;
+
+    const videoKeyResponse = await axios
+      .get(`https://api.themoviedb.org/3/movie/${this.id}/videos?api_key=49f6cce872dedfb45746781479e03ce5`);
+
+    this.youtubeKey = videoKeyResponse.data.results.find(({site}: any) => site === "YouTube").key;
+
+    const castResponse = await axios
+      .get(`https://api.themoviedb.org/3/movie/${this.id}/credits?api_key=49f6cce872dedfb45746781479e03ce5`);
+
+    this.cast = castResponse.data.cast;
+    // console.log(this.cast[0]);
+  }
+ }
 </script>
 
 <style lang="scss" scoped>
