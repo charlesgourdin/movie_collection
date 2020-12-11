@@ -39,9 +39,11 @@ export default class MoviesList extends Vue {
 
 <style scoped>
   .movies {
-    width: fit-content;
-    padding: auto;
-    display: flex;
-    flex-wrap: wrap;
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(18rem, max-content));
+    grid-gap: 3rem;
+    justify-content: center;
+    padding: initial;
   }
 </style>

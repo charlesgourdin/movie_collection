@@ -57,10 +57,8 @@ export default class MovieItem extends Vue {
     position: relative;
     width: 16rem;
     padding: 1rem;
-    margin: 1rem;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    display: inline-block;
+    margin: 1rem 0;
 
     .note {
       position: absolute;
