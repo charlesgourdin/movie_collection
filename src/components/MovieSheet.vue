@@ -37,6 +37,7 @@
             {{ movie.overview }}
           </p>
         </div>
+        <CastRow :cast="cast" />
       </div>
     </div>
   </div>
@@ -44,9 +45,10 @@
 
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-property-decorator';
+import axios from 'axios';
 
 import YoutubeVideo from './YoutubeVideo.vue';
-import axios from 'axios';
+import CastRow from './CastRow.vue';
 
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
@@ -57,6 +59,7 @@ library.add(faTimes, faSpinner);
 @Component({
   components: {
     YoutubeVideo,
+    CastRow,
   },
 })
 
@@ -89,8 +92,8 @@ export default class MovieSheet extends Vue{
     const castResponse = await axios
       .get(`https://api.themoviedb.org/3/movie/${this.id}/credits?api_key=49f6cce872dedfb45746781479e03ce5`);
 
-    this.cast = castResponse.data.cast;
-    // console.log(this.cast[0]);
+    this.cast = castResponse.data.cast.splice(0, 4);
+    console.log(this.cast[0], this.cast.length);
   }
  }
 </script>
@@ -114,7 +117,7 @@ export default class MovieSheet extends Vue{
 
     .sheet {
       width: 560px;
-      height: 100vh;
+      min-height: 100vh;
       padding-top: 4rem;
       position: relative;
       top: 0;
@@ -123,6 +126,7 @@ export default class MovieSheet extends Vue{
       box-shadow: -10px 0px 25px 5px rgba(0,0,0,0.29);
       animation: slide-in-right 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
       color: whitesmoke;
+      overflow-y: auto;
 
       .loader {
         height: 80%;

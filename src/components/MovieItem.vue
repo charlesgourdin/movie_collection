@@ -9,7 +9,7 @@
     </div>
     <img
       :src="'https://image.tmdb.org/t/p/w300/' + movie.poster_path"
-      alt="movie.title"
+      :alt="movie.title"
       @click="setCurrentMovie(movie.id)"
     >
     <h2 class="movie-title">
