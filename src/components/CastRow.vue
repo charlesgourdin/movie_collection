@@ -30,9 +30,12 @@ export default class CastRow extends Vue {
   .cast-row {
     margin-top: 2rem;
     margin-bottom: 5rem;
+    display: flex;
+    flex-direction: column;
 
     h3 {
       margin-left: 2rem;
+      margin-bottom: 0;
       width: 90%;
       text-align: left;
     }
@@ -42,6 +45,7 @@ export default class CastRow extends Vue {
       flex-wrap: nowrap;
       width: 90%;
       margin: auto;
+      margin-top: 2rem !important;
 
       .actor {
         min-width: 6rem;
