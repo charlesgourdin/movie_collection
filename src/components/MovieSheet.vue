@@ -6,7 +6,7 @@
     />
     <div class="sheet">
       <div
-        v-if="youtubeKey === ''"
+        v-if="Object.entries(movie).length === 0"
         class="loader"
       >
         <font-awesome-icon
@@ -16,7 +16,7 @@
           spin
         />
       </div>
-      <div v-if="youtubeKey !== ''">
+      <div v-if="Object.entries(movie).length > 0">
         <button
           class="close-button"
           @click="closeSheet()"
@@ -27,7 +27,7 @@
             size="2x"
           />
         </button>
-        <YoutubeVideo :videoKey="youtubeKey" />
+        <YoutubeVideo v-if="youtubeKey !== ''" :videoKey="youtubeKey" />
         <div class="description">
           <h2>{{ movie.title }}</h2>
           <p class="info">
@@ -87,13 +87,17 @@ export default class MovieSheet extends Vue{
     const videoKeyResponse = await axios
       .get(`https://api.themoviedb.org/3/movie/${this.id}/videos?api_key=49f6cce872dedfb45746781479e03ce5`);
 
-    this.youtubeKey = videoKeyResponse.data.results.find(({site}: any) => site === "YouTube").key;
+    if(videoKeyResponse.data.results.length > 0) {
+      this.youtubeKey = videoKeyResponse.data.results.find(({site}: any) => site === "YouTube").key || "";
+    }
+
 
     const castResponse = await axios
       .get(`https://api.themoviedb.org/3/movie/${this.id}/credits?api_key=49f6cce872dedfb45746781479e03ce5`);
 
-    this.cast = castResponse.data.cast.splice(0, 4);
-    console.log(this.cast[0], this.cast.length);
+    this.cast = castResponse.data.cast
+      .filter(({profile_path}: any) => profile_path)
+      .splice(0, 4);
   }
  }
 </script>

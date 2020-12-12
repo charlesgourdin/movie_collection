@@ -1,13 +1,24 @@
 <template>
   <div class="navbar">
+    <div class="menu">
+      <h2 v-on:click="getMovieBy('popular')">Popular</h2>
+      <h2 v-on:click="getMovieBy('top_rated')">Top rated</h2>
+    </div>
     <div class="search-bar">
       <input
         v-model="search"
-        placeholder="modifiez-moi"
+        placeholder="search a movie..."
         @keyup="fetchSearch"
       >
       <div v-if="results.length > 0" class="result">
-        <p class="result-item" v-for="result in results" :key="result.name">{{ result.title }}</p>
+        <p
+          class="result-item"
+          v-for="result in results"
+          :key="result.name"
+          v-on:click="displayItem(result.id)"
+        >
+          {{ result.title }}
+        </p>
       </div>
     </div>
   </div>
@@ -32,6 +43,17 @@ export default class Navbar extends Vue {
       this.results = [];
     }
   }
+
+  displayItem(id: number) {
+    this.results = [];
+    this.search = "";
+    this.$store.dispatch('fetchMovies', {id})
+  }
+
+  getMovieBy(request: string) {
+    window.scrollTo(0,0);
+    this.$store.dispatch('getMovieBy', {request, page: 1})
+  }
 }
 </script>
 
@@ -47,21 +69,37 @@ export default class Navbar extends Vue {
     justify-content: center;
     align-items: center;
 
+    .menu {
+      display: flex;
+      margin-left: 1rem;
+
+      h2 {
+        cursor: pointer;
+        margin-right: 2rem;
+        font-size: 1rem;
+      }
+    }
+
     .search-bar {
       position: relative;
       width: 15rem;
+      margin-left: auto;
+      margin-right: 1rem;
 
       input {
         border: none;
-        padding: 0 .5rem;
+        padding: 0 1rem;
         height: 2rem;
-        width: 14rem;
+        width: 12rem;
+        border-radius: 1rem;
       }
 
       .result {
         position: absolute;
-        top: 2rem;
+        top: 3rem;
         width: 15rem;
+        border-radius: .5rem;
+        padding: .5rem 0;
         background-color: whitesmoke;
         color: black;
 
