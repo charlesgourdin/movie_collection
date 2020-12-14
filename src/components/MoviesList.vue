@@ -1,5 +1,9 @@
 <template>
   <div class="movies">
+    <div v-if="movies.length === 0" class="no-movies">
+      <h2>Oh, there's no movies here...</h2>
+      <p>Use the search bar or choose a category!</p>
+    </div>
     <div class="list">
       <MovieItem
         v-for="movie in movies"
@@ -44,6 +48,19 @@ export default class MoviesList extends Vue {
   .movies{
     width: 100%;
     min-height: calc(100vh - 4rem);
+
+    .no-movies {
+      height: calc(100vh - 4rem);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      color: #433c4d;
+
+      h2 {
+        font-size: 2rem;
+      }
+    }
 
     .list {
       display: grid;

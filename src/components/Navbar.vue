@@ -10,44 +10,19 @@
         placeholder="search a movie..."
         @keyup="fetchSearch"
       >
-      <div v-if="results.length > 0" class="result">
-        <p
-          class="result-item"
-          v-for="result in results"
-          :key="result.name"
-          v-on:click="displayItem(result.id)"
-        >
-          {{ result.title }}
-        </p>
-      </div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import axios from 'axios';
 
 @Component
 export default class Navbar extends Vue {
   search: string = "";
-  results: any[] = [];
 
-  async fetchSearch() {
-    if(this.search.length > 2) {
-      const response = await axios
-        .get(`https://api.themoviedb.org/3/search/movie?api_key=49f6cce872dedfb45746781479e03ce5&query=${this.search}&page=1`);
-  
-      this.results = response.data.results;
-    } else {
-      this.results = [];
-    }
-  }
-
-  displayItem(id: number) {
-    this.results = [];
-    this.search = "";
-    this.$store.dispatch('fetchMovies', {id})
+  fetchSearch() {
+    this.$store.dispatch('fetchSearch', {search: this.search});
   }
 
   getMovieBy(request: string) {
@@ -93,28 +68,6 @@ export default class Navbar extends Vue {
         width: 12rem;
         border-radius: 1rem;
       }
-
-      .result {
-        position: absolute;
-        top: 3rem;
-        width: 15rem;
-        border-radius: .5rem;
-        padding: .5rem 0;
-        background-color: whitesmoke;
-        color: black;
-
-        .result-item {
-          margin: 0;
-          padding: .5rem;
-          text-align: left;
-          cursor: pointer;
-
-          &:hover {
-            background-color: rgb(170, 178, 196);
-          }
-        }
-      }
     }
-
   }
 </style>
