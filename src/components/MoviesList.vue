@@ -4,6 +4,22 @@
       <h2>Oh, there's no movies here...</h2>
       <p>Use the search bar or choose a category!</p>
     </div>
+    <div class="current-cat">
+      <h2>
+        <font-awesome-icon
+          class="icon"
+          :icon="['fas', 'film']"
+        />
+        Movies
+      </h2>
+      <h4>
+        <font-awesome-icon
+          class="icon"
+          :icon="['fas', 'caret-right']"
+        />
+        {{ currentSearch }}
+      </h4>
+    </div>
     <div class="list">
       <MovieItem
         v-for="movie in movies"
@@ -19,9 +35,13 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
+import { mapState } from 'vuex';
 
 import MovieItem from './MovieItem.vue';
-import { mapState } from 'vuex';
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { faFilm, faCaretRight } from '@fortawesome/free-solid-svg-icons';
+ 
+library.add(faFilm, faCaretRight);
 
 @Component({
   components: {
@@ -29,7 +49,8 @@ import { mapState } from 'vuex';
   },
   computed: mapState([
     'movies',
-    'pages'
+    'pages',
+    'currentSearch',
   ])
 })
 export default class MoviesList extends Vue {
@@ -59,6 +80,28 @@ export default class MoviesList extends Vue {
 
       h2 {
         font-size: 2rem;
+      }
+    }
+
+    .current-cat {
+      margin: 0 3rem;
+      padding-top: .5rem;
+      
+      h2 {
+        text-align: left;
+
+        .icon {
+        margin-right: 1rem;
+      }
+      }
+
+      h4 {
+        text-align: left;
+        margin-left: 1rem;
+
+        .icon {
+        margin-right: .5rem;
+      }
       }
     }
 

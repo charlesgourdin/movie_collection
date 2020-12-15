@@ -3,13 +3,14 @@ import Vuex from 'vuex';
 
 import axios from 'axios';
 
+import textFormat from '../src/utils/stringFormat';
+
 Vue.use(Vuex);
 
 const store = new Vuex.Store({
   state: {
-    count: 0,
     movies: [],
-    currentSearch: "",
+    currentSearch: 'Trending',
     pages: {
       current: 0,
       total: 0
@@ -23,7 +24,7 @@ const store = new Vuex.Store({
       state.pages = pages;
     },
     setCurrentSearch (state, currentSearch) {
-      state.currentSearch = currentSearch;
+      state.currentSearch = textFormat(currentSearch);
     },
     showMoreMovies (state, movies) {
       state.movies = [...state.movies, ...movies];
@@ -49,7 +50,7 @@ const store = new Vuex.Store({
   
       commit('setMovies', movies);
       commit('setPages', {current: 1, total: 1});
-      commit('setCurrentSearch', '')
+      commit('setCurrentSearch', 'Trending')
 
     },
     async fetchSearch({commit}, {search}) {
@@ -68,7 +69,7 @@ const store = new Vuex.Store({
       }
 
       commit('setMovies', movies);
-      commit('setCurrentSearch', '');
+      commit('setCurrentSearch', `Search : ${search}`);
       commit('setPages', {current: 1, total: 1});
 
     },

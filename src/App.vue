@@ -23,7 +23,8 @@ export default class App extends Vue {}
 
 <style lang="scss">
 body {
-  background: linear-gradient(301deg, rgba(3,9,24,1) 0%, rgba(4,7,25,1) 35%, rgba(29,17,45,1) 100%);
+  background: linear-gradient(301deg, rgba(3,9,24,1) 0%, rgba(4,7,25,1) 35%, #041337 100%);
+  // background-color: #020f2c;
   color: whitesmoke;
   margin: 0;
 }
