@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <Navbar />
+    <Sidebar />
     <div class="container">
       <MoviesList />
     </div>
@@ -9,22 +9,26 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import Navbar from './components/Navbar.vue';
+import Sidebar from './components/Sidebar.vue';
 import MoviesList from './components/MoviesList.vue';
 
 @Component({
   components: {
-    Navbar,
     MoviesList,
+    Sidebar,
   },
 })
 export default class App extends Vue {}
 </script>
 
 <style lang="scss">
+@font-face { 
+  font-family: "century-gothic";
+  src: url("./assets/fonts/Century_Gothic_400.ttf"); 
+}
+
 body {
   background: linear-gradient(301deg, rgba(3,9,24,1) 0%, rgba(4,7,25,1) 35%, #041337 100%);
-  // background-color: #020f2c;
   color: whitesmoke;
   margin: 0;
 }
@@ -34,9 +38,11 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
+  font-family: 'century-gothic';
+
 
   .container {
-    margin-top: 4rem;
+    margin-left: 5rem;
   }
 }
 </style>

@@ -126,8 +126,8 @@ export default class MovieSheet extends Vue{
       position: relative;
       top: 0;
       right: 0;
-      background-color: #0c0b10;
-      box-shadow: -10px 0px 25px 5px rgba(0,0,0,0.29);
+      background-color: rgb(9, 11, 21);
+      box-shadow: -12px 0px 25px 5px rgba(0,0,0,0.4);
       animation: slide-in-right 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
       color: whitesmoke;
       overflow-y: auto;

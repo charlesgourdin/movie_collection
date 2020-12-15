@@ -1,7 +1,7 @@
 <template>
   <div class="cast-row">
     <h3>Cast</h3>
-    <div class="container">
+    <div class="cast-container">
       <div v-for="actor in cast" v-bind:key="actor.cast_id" class="actor">
         <img
           :src="'https://image.tmdb.org/t/p/w300/' + actor.profile_path"
@@ -40,7 +40,7 @@ export default class CastRow extends Vue {
       text-align: left;
     }
 
-    .container {
+    .cast-container {
       display: flex;
       flex-wrap: nowrap;
       width: 90%;

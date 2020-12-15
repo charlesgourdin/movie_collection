@@ -1,24 +1,9 @@
 <template>
   <div class="movies">
+    <CurrentSearch />
     <div v-if="movies.length === 0" class="no-movies">
       <h2>Oh, there's no movies here...</h2>
       <p>Use the search bar or choose a category!</p>
-    </div>
-    <div class="current-cat">
-      <h2>
-        <font-awesome-icon
-          class="icon"
-          :icon="['fas', 'film']"
-        />
-        Movies
-      </h2>
-      <h4>
-        <font-awesome-icon
-          class="icon"
-          :icon="['fas', 'caret-right']"
-        />
-        {{ currentSearch }}
-      </h4>
     </div>
     <div class="list">
       <MovieItem
@@ -38,6 +23,7 @@ import { Component, Vue } from 'vue-property-decorator';
 import { mapState } from 'vuex';
 
 import MovieItem from './MovieItem.vue';
+import CurrentSearch from './CurrentSearch.vue';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faFilm, faCaretRight } from '@fortawesome/free-solid-svg-icons';
  
@@ -46,11 +32,11 @@ library.add(faFilm, faCaretRight);
 @Component({
   components: {
     MovieItem,
+    CurrentSearch
   },
   computed: mapState([
     'movies',
     'pages',
-    'currentSearch',
   ])
 })
 export default class MoviesList extends Vue {
@@ -68,10 +54,14 @@ export default class MoviesList extends Vue {
 <style lang="scss" scoped>
   .movies{
     width: 100%;
-    min-height: calc(100vh - 4rem);
+    min-height: 100vh;
 
     .no-movies {
-      height: calc(100vh - 4rem);
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 100vh;
+      width: 100vw;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -83,34 +73,12 @@ export default class MoviesList extends Vue {
       }
     }
 
-    .current-cat {
-      margin: 0 3rem;
-      padding-top: .5rem;
-      
-      h2 {
-        text-align: left;
-
-        .icon {
-        margin-right: 1rem;
-      }
-      }
-
-      h4 {
-        text-align: left;
-        margin-left: 1rem;
-
-        .icon {
-        margin-right: .5rem;
-      }
-      }
-    }
-
     .list {
+      padding-top: 8rem;
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(18rem, max-content));
       grid-gap: 3rem;
       justify-content: center;
-      padding: initial;
     }
 
     .show-more {
