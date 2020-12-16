@@ -56,17 +56,13 @@ const store = new Vuex.Store({
     async fetchSearch({commit}, {search}) {
       let movies;
 
-      if(search.length > 2) {
-        const response = await axios
-          .get(`https://api.themoviedb.org/3/search/movie?api_key=49f6cce872dedfb45746781479e03ce5&query=${search}&page=1`);
+      const response = await axios
+        .get(`https://api.themoviedb.org/3/search/movie?api_key=49f6cce872dedfb45746781479e03ce5&query=${search}&page=1`);
 
-        movies = response.data.results
-          .filter(({vote_average, poster_path}) => {
-            return (vote_average > 0 && poster_path !== null)
-          });
-      } else {
-        movies = [];
-      }
+      movies = response.data.results
+        .filter(({vote_average, poster_path}) => {
+          return (vote_average > 0 && poster_path !== null)
+        });
 
       commit('setMovies', movies);
       commit('setCurrentSearch', `Search : ${search}`);

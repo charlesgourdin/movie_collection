@@ -41,6 +41,7 @@ library.add(faFilm, faCaretRight);
 })
 export default class MoviesList extends Vue {
   created() {
+    if(this.$route.params.cat === 'trending')
     this.$store.dispatch('fetchMovies', {id: null})
   }
 

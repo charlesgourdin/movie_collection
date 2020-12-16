@@ -2,7 +2,7 @@
   <div id="app">
     <Sidebar />
     <div class="container">
-      <MoviesList />
+      <router-view></router-view>
     </div>
   </div>
 </template>
@@ -31,6 +31,8 @@ body {
   background: linear-gradient(301deg, rgba(3,9,24,1) 0%, rgba(4,7,25,1) 35%, #041337 100%);
   color: whitesmoke;
   margin: 0;
+  min-width: 100vw;
+  min-height: 100vh;
 }
 
 #app {
@@ -44,5 +46,10 @@ body {
   .container {
     margin-left: 5rem;
   }
+}
+
+a {
+  color: whitesmoke;
+  text-decoration: none;
 }
 </style>

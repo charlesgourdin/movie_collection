@@ -38,7 +38,7 @@ export default class CurrentSearch extends Vue {
 
 <style lang="scss" scoped>
   .current-search {
-    z-index: 20;
+    z-index: 10;
     position: fixed;
     right: 0;
     background-color: rgb(0, 0, 0);

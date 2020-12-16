@@ -120,6 +120,7 @@ export default class MovieSheet extends Vue{
     }
 
     .sheet {
+      z-index: 20;
       width: 560px;
       min-height: 100vh;
       padding-top: 4rem;

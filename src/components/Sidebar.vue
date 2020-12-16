@@ -1,22 +1,40 @@
 <template>
   <div :class="'sidebar' + ' ' + getOpenStatus">
-    <div class="logo-container" @click="fetchMovies()">
-      <img class="logo" src="../assets/WIW-logo.png" alt="WIW logo" />
-      <h2 v-if="isOpen">what I watch</h2>
-    </div>
+    <router-link to="/">
+      <div class="logo-container" @click="setCurrentPath('/')">
+        <img class="logo" src="../assets/WIW-logo.png" alt="WIW logo" />
+        <h2 v-if="isOpen">what I watch</h2>
+      </div>
+    </router-link>
     <div :class="'search-bar' + ' ' + getOpenStatus" @click="openSidebar()">
       <input
         :class="getOpenStatus"
         v-model="search"
         placeholder="search a movie..."
-        @keyup="fetchSearch"
+        @keyup.enter="fetchSearch"
       >
       <font-awesome-icon
         :class="'icon' + ' ' + getOpenStatus"
         :icon="['fas', 'search']"
         size="lg"
+        v-on:click="fetchSearch"
       />
     </div>
+    <router-link to="/movies/trending">
+      <div
+        class="movies"
+        @click="openSidebar(),
+        setCurrentPath('/movies/trending'),
+        fetchMovies()"
+      >
+        <font-awesome-icon
+          :class="'icon' + ' ' + getOpenStatus"
+          :icon="['fas', 'film']"
+          size="2x"
+        />
+        <h3 v-if="isOpen">Movies</h3>
+      </div>
+    </router-link>
     <div v-if="isOpen"
       class="outside"
       @click="closeSidebar()"
@@ -28,21 +46,32 @@
 import { Component, Vue } from 'vue-property-decorator';
 
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { faSearch } from '@fortawesome/free-solid-svg-icons';
+import { faFilm, faSearch } from '@fortawesome/free-solid-svg-icons';
  
-library.add(faSearch);
+library.add(faFilm, faSearch);
 
 @Component
 export default class Sidebar extends Vue {
   isOpen: boolean = false;
   search: string = "";
+  path: string = "";
 
   fetchMovies() {
     this.$store.dispatch('fetchMovies', {id: null});
   }
 
   fetchSearch() {
-    this.$store.dispatch('fetchSearch', {search: this.search});
+    if(this.search.length > 2 && this.isOpen) {
+      if(this.path !== '/movies/search') {
+        this.$router.push('/movies/search')
+        this.path = '/movies/search'
+      }
+      this.$store.dispatch('fetchSearch', {search: this.search});
+    }
+  }
+
+  setCurrentPath(path: string) {
+    this.path = path;
   }
 
   openSidebar() {
@@ -59,12 +88,16 @@ export default class Sidebar extends Vue {
       : ""
   }
 
+  created() {
+    this.path = ( this as any ).$router.history.current.path
+  }
+
 }
 </script>
 
 <style lang="scss" scoped>
   .sidebar {
-    z-index: 13;
+    z-index: 10;
     height: 100vh;
     width: 5rem;
     background-color: rgb(9, 11, 21);
@@ -99,7 +132,7 @@ export default class Sidebar extends Vue {
     }
 
     .search-bar {
-      margin-top: 3rem;
+      height: 12rem;
       cursor: pointer;
       display: flex;
       align-items: center;
@@ -132,6 +165,18 @@ export default class Sidebar extends Vue {
           position: absolute;
           left: .5rem;
         }
+      }
+    }
+
+    .movies {
+      color: whitesmoke;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+
+      h3 {
+        animation: slide-in-left 0.3s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+        margin-left: 1rem;
       }
     }
 
