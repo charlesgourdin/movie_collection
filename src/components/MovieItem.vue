@@ -10,7 +10,7 @@
     <img
       :src="'https://image.tmdb.org/t/p/w300/' + movie.poster_path"
       :alt="movie.title"
-      @click="setCurrentMovie(movie.id)"
+      @click="setCurrentMovie(movie.id, movie.type)"
     >
     <h2 class="movie-title">
       {{ movie.title }}
@@ -18,6 +18,7 @@
     <MovieSheet
       v-for="id in currentMovie"
       :id="id"
+      :type="currentType"
       :key="id"
       @close-sheet="setCurrentMovie()"
     />
@@ -43,11 +44,16 @@ export default class MovieItem extends Vue {
   @Prop() movie?: object;
 
   currentMovie: number[] = [];
+  currentType: string = '';
 
-  setCurrentMovie(id: number):void {
+  setCurrentMovie(id: number, type: string):void {
     id
     ? this.currentMovie.push(id)
     : this.currentMovie.splice(0);
+
+    type
+    ? this.currentType = type
+    : null;
   }
  }
 </script>

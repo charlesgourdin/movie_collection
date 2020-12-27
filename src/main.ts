@@ -10,7 +10,8 @@ import MoviesList from '../src/components/MoviesList.vue';
 const routes = [
   { path: '/', component: Home },
   { path: '/movies/:category', component: MoviesList },
-  { path: '/tv/:category', component: MoviesList }
+  { path: '/tv/:category', component: MoviesList },
+  { path: '/search', component: MoviesList }
 ];
 
 const router = new VueRouter({

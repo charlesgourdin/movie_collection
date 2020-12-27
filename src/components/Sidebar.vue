@@ -1,7 +1,7 @@
 <template>
   <div :class="'sidebar' + ' ' + getOpenStatus">
     <router-link to="/">
-      <div class="logo-container" @click="setCurrentPath('/')">
+      <div class="logo-container" @click="setCurrentPath('/'), setCategory('')">
         <img class="logo" src="../assets/WIW-logo.png" alt="WIW logo" />
         <h2 v-if="isOpen">what I watch</h2>
       </div>
@@ -10,7 +10,7 @@
       <input
         :class="getOpenStatus"
         v-model="search"
-        placeholder="search a movie..."
+        placeholder="search movie / tv show..."
         @keyup.enter="fetchSearch"
       >
       <font-awesome-icon
@@ -130,9 +130,10 @@ export default class Sidebar extends Vue {
 
   fetchSearch() {
     if(this.search.length > 2 && this.isOpen) {
-      if(this.path !== '/movies/search') {
-        this.$router.push('/movies/search')
-        this.path = '/movies/search'
+      this.setCategory('search');
+      if(this.path !== '/search') {
+        this.$router.push('/search')
+        this.path = '/search'
       }
       this.$store.dispatch('fetchSearch', {search: this.search});
     }
@@ -254,6 +255,10 @@ export default class Sidebar extends Vue {
 
       .cat-row {
         display: flex;
+
+        .icon {
+          width: 40px;
+        }
       }
 
       .movies, .tv {

@@ -57,16 +57,28 @@ const store = new Vuex.Store({
     },
     async fetchSearch({commit}, {search}) {
       let movies;
+      let tv;
 
-      const response = await axios
-        .get(`https://api.themoviedb.org/3/search/${this.state.currentCategory}?api_key=49f6cce872dedfb45746781479e03ce5&query=${search}&page=1`);
+      const responseMovies = await axios
+        .get(`https://api.themoviedb.org/3/search/movie?api_key=49f6cce872dedfb45746781479e03ce5&query=${search}&page=1`);
 
-      movies = response.data.results
+      movies = responseMovies.data.results
         .filter(({vote_average, poster_path}) => {
           return (vote_average > 0 && poster_path !== null)
-        });
+        })
+        .map((item) => {return {...item, type: 'movie'}});
 
-      commit('setMovies', movies);
+      const responseTv = await axios
+        .get(`https://api.themoviedb.org/3/search/tv?api_key=49f6cce872dedfb45746781479e03ce5&query=${search}&page=1`);
+
+
+      tv = responseTv.data.results
+      .filter(({vote_average, poster_path}) => {
+        return (vote_average > 0 && poster_path !== null)
+      })
+      .map((item) => {return {...item, type: 'tv'}});
+
+      commit('setMovies', [...movies, ...tv]);
       commit('setCurrentSearch', `Search : ${search}`);
       commit('setPages', {current: 1, total: 1});
 

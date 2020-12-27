@@ -41,7 +41,14 @@ library.add(faFilm, faCaretRight);
   ]),
   watch:{
     $route (){
+      let category = this.$route.path.split('/').splice(1, 1).toString();
       const path = this.$route.path.split('/').splice(2).toString();
+
+      if (category === 'movies') {
+        category = 'movie'
+      }
+
+      this.$store.commit('setCategory', category)
 
     if(path === 'trending') {
       this.$store.dispatch('fetchMovies', {id: null})
