@@ -1,7 +1,7 @@
 <template>
   <div class="work-in-progress">
     <img class="logo" src="../assets/WIW-logo.png" alt="WIW logo" />
-    <h3>Oups... There's nothing here yet, we're working on it!</h3>
+    <h3>This page is under construction. <br/>You can still browse the list of movies and series. Have fun!</h3>
   </div>
 </template>
 
@@ -27,6 +27,7 @@ export default {
 
   h3 {
     margin: 0;
+    line-height: 2rem;
   }
  }
 </style>
