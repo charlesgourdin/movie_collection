@@ -35,14 +35,36 @@ library.add(faFilm, faCaretRight);
     CurrentSearch
   },
   computed: mapState([
+    'activeCategory',
     'movies',
     'pages',
-  ])
+  ]),
+  watch:{
+    $route (){
+      const path = this.$route.path.split('/').splice(2).toString();
+
+    if(path === 'trending') {
+      this.$store.dispatch('fetchMovies', {id: null})
+    } else {
+      this.$store.dispatch('getMovieBy', {request: path, page: 1})
+    }
+    }
+} 
 })
 export default class MoviesList extends Vue {
+
   created() {
-    if(this.$route.params.cat === 'trending')
-    this.$store.dispatch('fetchMovies', {id: null})
+    this.fetchData();
+  }
+
+  fetchData() {
+   const path = this.$route.path.split('/').splice(2).toString();
+
+    if(path === 'trending') {
+      this.$store.dispatch('fetchMovies', {id: null})
+    } else {
+      this.$store.dispatch('getMovieBy', {request: path, page: 1})
+    }
   }
 
   showMore() {

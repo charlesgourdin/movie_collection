@@ -22,17 +22,31 @@
     </div>
     <router-link to="/movies/trending">
       <div
-        class="movies"
-        @click="openSidebar(),
-        setCurrentPath('/movies/trending'),
-        fetchMovies()"
+        :class="'movies' + ' ' + getcurrentSearch "
+        @click="openSidebar()"
       >
         <font-awesome-icon
           :class="'icon' + ' ' + getOpenStatus"
           :icon="['fas', 'film']"
           size="2x"
+          @click="setCurrentPath('/movies/trending')"
         />
         <h3 v-if="isOpen">Movies</h3>
+        <div
+          v-if="moviesCategories.includes(currentSearch) && getOpenStatus"
+          class="categories"
+        >
+          <ul>
+            <li
+              v-for="category in moviesCategories" v-bind:key="category"
+              :class="category === currentSearch && 'isActive'"
+            >
+              <router-link :to="`/movies/${category}`">
+                {{ textFormat(category) }}
+              </router-link>
+            </li>
+          </ul>
+        </div>
       </div>
     </router-link>
     <div v-if="isOpen"
@@ -44,17 +58,29 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
+import { mapState } from 'vuex';
 
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faFilm, faSearch } from '@fortawesome/free-solid-svg-icons';
  
 library.add(faFilm, faSearch);
 
-@Component
+@Component({
+  computed: mapState([
+    'currentSearch',
+    'movies',
+    'pages',
+  ])
+})
 export default class Sidebar extends Vue {
   isOpen: boolean = false;
   search: string = "";
   path: string = "";
+  moviesCategories: Array<string> = [
+    'trending',
+    'popular',
+    'top_rated',
+  ];
 
   fetchMovies() {
     this.$store.dispatch('fetchMovies', {id: null});
@@ -82,6 +108,12 @@ export default class Sidebar extends Vue {
     this.isOpen = false;
   }
 
+  get getcurrentSearch() {
+    return this.moviesCategories.includes(this.$store.state.currentSearch)
+      ? "isActive"
+      : ""
+  }
+
   get getOpenStatus() {
     return this.isOpen
       ? "isOpen"
@@ -91,6 +123,10 @@ export default class Sidebar extends Vue {
   created() {
     this.path = ( this as any ).$router.history.current.path
   }
+
+  textFormat(text: string) {
+  return  text.charAt(0).toUpperCase() + text.slice(1).replace('_', ' ');
+}
 
 }
 </script>
@@ -173,10 +209,44 @@ export default class Sidebar extends Vue {
       cursor: pointer;
       display: flex;
       align-items: center;
+      position: relative;
 
       h3 {
         animation: slide-in-left 0.3s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
-        margin-left: 1rem;
+        margin: 0 1rem;
+      }
+
+      &.isActive {
+        color: rgb(150, 12, 12);
+      }
+
+      .categories {
+        animation: slide-in-left 0.3s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+        position: absolute;
+        top: 2rem;
+        left: 4rem;
+
+        ul {
+          list-style: none;
+          padding: 0;
+          margin: 0;
+          width: 9rem;
+          text-align: left;
+
+          li {
+            margin: .5rem 0;
+            
+            a {
+              color: #8e9198;
+            }
+
+            &.isActive {
+              a {
+                color: rgb(150, 12, 12);
+              }
+            }
+          }
+        }
       }
     }
 

@@ -12,7 +12,7 @@
         class="icon"
         :icon="['fas', 'caret-right']"
       />
-      {{ currentSearch }}
+      {{ textFormat(currentSearch) }}
     </h4>
   </div>
 </template>
@@ -32,7 +32,9 @@ library.add(faFilm, faCaretRight);
   ])
 })
 export default class CurrentSearch extends Vue {
-
+  textFormat(text: string) {
+    return  text.charAt(0).toUpperCase() + text.slice(1).replace('_', ' ');
+  }
 }
 </script>
 
