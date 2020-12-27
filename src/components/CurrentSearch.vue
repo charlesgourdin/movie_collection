@@ -5,7 +5,7 @@
         class="icon"
         :icon="['fas', 'film']"
       />
-      Movies
+      {{textFormat(currentCategory)}}
     </h2>
     <h4>
       <font-awesome-icon
@@ -29,11 +29,16 @@ library.add(faFilm, faCaretRight);
 @Component({
   computed: mapState([
     'currentSearch',
+    'currentCategory'
   ])
 })
 export default class CurrentSearch extends Vue {
   textFormat(text: string) {
-    return  text.charAt(0).toUpperCase() + text.slice(1).replace('_', ' ');
+    const formatedText = text.charAt(0).toUpperCase() + text.slice(1).replace('_', ' ')
+
+    return formatedText === 'Movie'
+      ? formatedText + 's'
+      : formatedText
   }
 }
 </script>

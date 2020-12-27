@@ -48,7 +48,8 @@ export default class CastRow extends Vue {
       margin-top: 2rem !important;
 
       .actor {
-        min-width: 6rem;
+        min-width: 3rem;
+        max-width: 6rem;
         margin: 0 1rem;
 
         img {

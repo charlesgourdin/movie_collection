@@ -20,35 +20,72 @@
         v-on:click="fetchSearch"
       />
     </div>
-    <router-link to="/movies/trending">
-      <div
-        :class="'movies' + ' ' + getcurrentSearch "
-        @click="openSidebar()"
-      >
-        <font-awesome-icon
-          :class="'icon' + ' ' + getOpenStatus"
-          :icon="['fas', 'film']"
-          size="2x"
-          @click="setCurrentPath('/movies/trending')"
-        />
-        <h3 v-if="isOpen">Movies</h3>
+    <div class="cat-container">
+      <router-link to="/movies/trending">
         <div
-          v-if="moviesCategories.includes(currentSearch) && getOpenStatus"
-          class="categories"
+          :class="'movies' + ' ' + getcurrentSearch('movie') "
+          @click="openSidebar(),
+          setCategory('movie')"
         >
-          <ul>
-            <li
-              v-for="category in moviesCategories" v-bind:key="category"
-              :class="category === currentSearch && 'isActive'"
-            >
-              <router-link :to="`/movies/${category}`">
-                {{ textFormat(category) }}
-              </router-link>
-            </li>
-          </ul>
+          <div class="cat-row">
+            <font-awesome-icon
+              :class="'icon' + ' ' + getOpenStatus"
+              :icon="['fas', 'film']"
+              size="2x"
+              @click="setCurrentPath('/movies/trending')"
+            />
+            <h3 v-if="isOpen">Movies</h3>
+          </div>
+          <div
+            v-if="moviesCategories.includes(currentSearch) && getOpenStatus && currentCategory === 'movie'"
+            class="categories"
+          >
+            <ul>
+              <li
+                v-for="category in moviesCategories" v-bind:key="category"
+                :class="(category === currentSearch && currentCategory === 'movie') && 'isActive'"
+              >
+                <router-link :to="`/movies/${category}`">
+                  {{ textFormat(category) }}
+                </router-link>
+              </li>
+            </ul>
+          </div>
         </div>
-      </div>
-    </router-link>
+      </router-link>
+      <router-link to="/tv/trending">
+        <div
+          :class="'tv' + ' ' + getcurrentSearch('tv') "
+          @click="openSidebar(),
+          setCategory('tv')"
+        >
+          <div class="cat-row">
+            <font-awesome-icon
+              :class="'icon' + ' ' + getOpenStatus"
+              :icon="['fas', 'tv']"
+              size="2x"
+              @click="setCurrentPath('/tv/trending')"
+            />
+            <h3 v-if="isOpen">TV</h3>
+          </div>
+          <div
+            v-if="moviesCategories.includes(currentSearch) && getOpenStatus && currentCategory === 'tv'"
+            class="categories"
+          >
+            <ul>
+              <li
+                v-for="category in moviesCategories" v-bind:key="category"
+                :class="(category === currentSearch && currentCategory === 'tv') && 'isActive'"
+              >
+                <router-link :to="`/tv/${category}`">
+                  {{ textFormat(category) }}
+                </router-link>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </router-link>
+    </div>
     <div v-if="isOpen"
       class="outside"
       @click="closeSidebar()"
@@ -61,13 +98,14 @@ import { Component, Vue } from 'vue-property-decorator';
 import { mapState } from 'vuex';
 
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { faFilm, faSearch } from '@fortawesome/free-solid-svg-icons';
+import { faFilm, faSearch, faTv } from '@fortawesome/free-solid-svg-icons';
  
-library.add(faFilm, faSearch);
+library.add(faFilm, faSearch, faTv);
 
 @Component({
   computed: mapState([
     'currentSearch',
+    'currentCategory',
     'movies',
     'pages',
   ])
@@ -84,6 +122,10 @@ export default class Sidebar extends Vue {
 
   fetchMovies() {
     this.$store.dispatch('fetchMovies', {id: null});
+  }
+
+  setCategory(category: string) {
+    this.$store.commit('setCategory', category)
   }
 
   fetchSearch() {
@@ -108,8 +150,8 @@ export default class Sidebar extends Vue {
     this.isOpen = false;
   }
 
-  get getcurrentSearch() {
-    return this.moviesCategories.includes(this.$store.state.currentSearch)
+  getcurrentSearch(cat: string) {
+    return cat === this.$store.state.currentCategory && this.moviesCategories.includes(this.$store.state.currentSearch)
       ? "isActive"
       : ""
   }
@@ -204,45 +246,54 @@ export default class Sidebar extends Vue {
       }
     }
 
-    .movies {
-      color: whitesmoke;
-      cursor: pointer;
+    .cat-container {
       display: flex;
-      align-items: center;
-      position: relative;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: flex-start;
 
-      h3 {
-        animation: slide-in-left 0.3s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
-        margin: 0 1rem;
+      .cat-row {
+        display: flex;
       }
 
-      &.isActive {
-        color: rgb(150, 12, 12);
-      }
+      .movies, .tv {
+        color:  #8e9198;
+        cursor: pointer;
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 2rem;
 
-      .categories {
-        animation: slide-in-left 0.3s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
-        position: absolute;
-        top: 2rem;
-        left: 4rem;
+        h3 {
+          animation: slide-in-left 0.3s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+          margin: 0 1rem;
+        }
 
-        ul {
-          list-style: none;
-          padding: 0;
-          margin: 0;
-          width: 9rem;
-          text-align: left;
+        &.isActive {
+          color: rgb(150, 12, 12);
+        }
 
-          li {
-            margin: .5rem 0;
-            
-            a {
-              color: #8e9198;
-            }
+        .categories {
+          animation: slide-in-left 0.3s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+          padding-left: 4rem;
 
-            &.isActive {
+          ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            width: 9rem;
+            text-align: left;
+
+            li {
+              margin: .5rem 0;
+              
               a {
-                color: rgb(150, 12, 12);
+                color: #8e9198;
+              }
+
+              &.isActive {
+                a {
+                  color: rgb(150, 12, 12);
+                }
               }
             }
           }

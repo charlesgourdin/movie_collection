@@ -37,7 +37,7 @@
             {{ movie.overview }}
           </p>
         </div>
-        <CastRow :cast="cast" />
+        <CastRow v-if="cast.length > 0" :cast="cast" />
       </div>
     </div>
   </div>
@@ -80,12 +80,12 @@ export default class MovieSheet extends Vue{
 
   async fetchMovie() {
     const movieResponse = await axios
-      .get(`https://api.themoviedb.org/3/movie/${this.id}?api_key=49f6cce872dedfb45746781479e03ce5`);
+      .get(`https://api.themoviedb.org/3/${this.$store.state.currentCategory}/${this.id}?api_key=49f6cce872dedfb45746781479e03ce5`);
 
     this.movie = movieResponse.data;
 
     const videoKeyResponse = await axios
-      .get(`https://api.themoviedb.org/3/movie/${this.id}/videos?api_key=49f6cce872dedfb45746781479e03ce5`);
+      .get(`https://api.themoviedb.org/3/${this.$store.state.currentCategory}/${this.id}/videos?api_key=49f6cce872dedfb45746781479e03ce5`);
 
     if(videoKeyResponse.data.results.length > 0) {
       this.youtubeKey = videoKeyResponse.data.results.find(({site}: any) => site === "YouTube").key || "";
@@ -93,7 +93,7 @@ export default class MovieSheet extends Vue{
 
 
     const castResponse = await axios
-      .get(`https://api.themoviedb.org/3/movie/${this.id}/credits?api_key=49f6cce872dedfb45746781479e03ce5`);
+      .get(`https://api.themoviedb.org/3/${this.$store.state.currentCategory}/${this.id}/credits?api_key=49f6cce872dedfb45746781479e03ce5`);
 
     this.cast = castResponse.data.cast
       .filter(({profile_path}: any) => profile_path)

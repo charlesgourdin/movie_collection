@@ -8,6 +8,7 @@ Vue.use(Vuex);
 const store = new Vuex.Store({
   state: {
     movies: [],
+    currentCategory: 'movie',
     currentSearch: 'trending',
     pages: {
       current: 0,
@@ -17,6 +18,9 @@ const store = new Vuex.Store({
   mutations: {
     setMovies (state, movies) {
       state.movies = movies
+    },
+    setCategory (state, category) {
+      state.currentCategory = category;
     },
     setPages (state, pages) {
       state.pages = pages;
@@ -35,12 +39,12 @@ const store = new Vuex.Store({
       
       if(id) {
         response = await axios
-          .get(`https://api.themoviedb.org/3/movie/${id}?api_key=49f6cce872dedfb45746781479e03ce5`);
+          .get(`https://api.themoviedb.org/3/${this.state.currentCategory}/${id}?api_key=49f6cce872dedfb45746781479e03ce5`);
 
         movies = [response.data];
       } else {
         response = await axios
-          .get(`https://api.themoviedb.org/3/trending/movie/week?api_key=49f6cce872dedfb45746781479e03ce5`);
+          .get(`https://api.themoviedb.org/3/trending/${this.state.currentCategory}/week?api_key=49f6cce872dedfb45746781479e03ce5`);
 
         movies = response.data.results
           .filter(({vote_average}) => vote_average > 0);
@@ -55,7 +59,7 @@ const store = new Vuex.Store({
       let movies;
 
       const response = await axios
-        .get(`https://api.themoviedb.org/3/search/movie?api_key=49f6cce872dedfb45746781479e03ce5&query=${search}&page=1`);
+        .get(`https://api.themoviedb.org/3/search/${this.state.currentCategory}?api_key=49f6cce872dedfb45746781479e03ce5&query=${search}&page=1`);
 
       movies = response.data.results
         .filter(({vote_average, poster_path}) => {
@@ -69,7 +73,7 @@ const store = new Vuex.Store({
     },
     async getMovieBy({commit}, {request, page}) {
       const response = await axios
-        .get(`https://api.themoviedb.org/3/movie/${request}?api_key=49f6cce872dedfb45746781479e03ce5&page=${page}`);
+        .get(`https://api.themoviedb.org/3/${this.state.currentCategory}/${request}?api_key=49f6cce872dedfb45746781479e03ce5&page=${page}`);
 
       const movies = response.data.results;
       const pages = {
