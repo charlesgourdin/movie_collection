@@ -8,7 +8,7 @@ Vue.use(Vuex);
 const store = new Vuex.Store({
   state: {
     movies: [],
-    currentCategory: '',
+    currentCategory: 'movie',
     currentSearch: 'trending',
     pages: {
       current: 0,
